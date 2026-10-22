@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Data Viewer | Academic Records Portal</title>
+  <meta name="description" content="A clean, responsive student records dashboard built with Vanilla JavaScript, HTML5, CSS3, and Fetch API.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Font: Inter for professional typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="brand-group">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title-wrap">
+              <h1>Student Data Viewer</h1>
+              <span class="project-tag">Placement Ready</span>
+            </div>
+            <p class="brand-subtitle">Dynamic academic record management dashboard with search, filtering, and sorting</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-container">
+
+        <!-- Analytics / KPI Cards -->
+        <section class="stats-grid" aria-label="Key Performance Indicators">
+          <div class="stat-card">
+            <div class="stat-icon-wrapper stat-blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">Total Enrolled</span>
+              <span class="stat-value" id="statTotalStudents">--</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper stat-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">Departments</span>
+              <span class="stat-value" id="statDepartments">--</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper stat-green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">Class Average</span>
+              <span class="stat-value" id="statAverageGrade">--</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper stat-amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">Top Performer</span>
+              <span class="stat-value stat-value-text" id="statTopStudent">--</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Controls Section: Search, Department Filter, Sort, Reset -->
+        <section class="controls-panel" aria-label="Filters and Search Controls">
+          <div class="controls-grid">
+            <!-- Search Input -->
+            <div class="control-group search-group">
+              <label for="searchInput" class="control-label">Search Student</label>
+              <div class="input-with-icon">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="Search by name or ID (e.g. Aarav, STU1001)..." 
+                  autocomplete="off"
+                  aria-label="Search students by name or student ID"
+                >
+                <button type="button" id="clearSearchBtn" class="clear-btn" aria-label="Clear search text" title="Clear search">
+                  &times;
+                </button>
+              </div>
+            </div>
+
+            <!-- Department Filter -->
+            <div class="control-group">
+              <label for="departmentFilter" class="control-label">Filter Department</label>
+              <div class="select-wrapper">
+                <select id="departmentFilter" aria-label="Filter students by department">
+                  <option value="all">All Departments</option>
+                  <!-- Populated dynamically via script.js -->
+                </select>
+                <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Sort By Dropdown -->
+            <div class="control-group">
+              <label for="sortSelect" class="control-label">Sort Records</label>
+              <div class="select-wrapper">
+                <select id="sortSelect" aria-label="Sort student records">
+                  <option value="default">Default Order</option>
+                  <option value="name-asc">Name (A &rarr; Z)</option>
+                  <option value="name-desc">Name (Z &rarr; A)</option>
+                  <option value="grade-desc">Grade (Highest First)</option>
+                  <option value="grade-asc">Grade (Lowest First)</option>
+                  <option value="id-asc">Student ID (Ascending)</option>
+                </select>
+                <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="control-group button-group">
+              <label class="control-label">&nbsp;</label>
+              <button type="button" id="resetBtn" class="btn btn-secondary" title="Reset all search and filter settings">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                <span>Reset</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Status Bar / Record Count -->
+          <div class="status-bar">
+            <span id="recordCount" class="record-count">Showing 0 of 0 records</span>
+            <span id="activeFilterPill" class="active-filter-pill hidden">Filtered</span>
+          </div>
+        </section>
+
+        <!-- Dynamic Content Display: Table, Loading, Error, Empty -->
+        <section class="data-section" aria-label="Student Records Table">
+          <!-- Loading State -->
+          <div id="loadingState" class="state-container loading-state" role="status" aria-live="polite">
+            <div class="spinner"></div>
+            <h3>Loading Student Records...</h3>
+            <p>Fetching data from <code>students.json</code></p>
+          </div>
+
+          <!-- Error State -->
+          <div id="errorState" class="state-container error-state hidden" role="alert">
+            <div class="state-icon error-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <h3 id="errorMessageTitle">Failed to Load Student Records</h3>
+            <p id="errorMessageDetail">An error occurred while fetching the dataset.</p>
+            <div class="error-tip" id="errorTip">
+              <strong>Tip for Local Testing:</strong> Browsers restrict <code>fetch()</code> requests over the <code>file://</code> protocol due to CORS security rules. Run this project through a local web server (e.g. VS Code Live Server, or <code>python -m http.server</code>).
+            </div>
+            <div class="error-actions">
+              <button type="button" id="retryBtn" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                </svg>
+                <span>Retry Request</span>
+              </button>
+              <button type="button" id="fallbackBtn" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>Preview Demo Data (Offline Mode)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty State (No records found matching filters) -->
+          <div id="emptyState" class="state-container empty-state hidden" role="status">
+            <div class="state-icon empty-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+            </div>
+            <h3>No Matching Students Found</h3>
+            <p>We couldn't find any student records matching your current search query or department filter.</p>
+            <button type="button" id="emptyResetBtn" class="btn btn-primary">
+              Clear Search &amp; Filters
+            </button>
+          </div>
+
+          <!-- Data Table View -->
+          <div id="tableWrapper" class="table-wrapper hidden">
+            <table class="students-table" id="studentsTable">
+              <caption>Comprehensive list of registered students and academic performance records</caption>
+              <thead>
+                <tr>
+                  <th scope="col" class="th-sortable" data-sort-key="id" title="Click to sort by ID">
+                    <div class="th-content">
+                      <span>Student ID</span>
+                      <span class="sort-icon" aria-hidden="true">&#x2195;</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="th-sortable" data-sort-key="name" title="Click to sort by Name">
+                    <div class="th-content">
+                      <span>Name</span>
+                      <span class="sort-icon" aria-hidden="true">&#x2195;</span>
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="th-content">
+                      <span>Email</span>
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="th-content">
+                      <span>Department</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="th-sortable th-right" data-sort-key="grade" title="Click to sort by Grade">
+                    <div class="th-content th-right">
+                      <span>Grade (%)</span>
+                      <span class="sort-icon" aria-hidden="true">&#x2195;</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="th-center">
+                    <div class="th-content th-center">
+                      <span>Performance</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <!-- Dynamically populated via script.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <div class="footer-meta">
+          <p class="footer-title">Student Data Viewer &bull; Final Year Portfolio Project</p>
+          <p class="footer-tech">Engineered with <strong>HTML5</strong>, <strong>CSS3 (Flexbox/Grid)</strong>, <strong>Modern JavaScript (ES6+)</strong>, and <strong>Fetch API</strong></p>
+        </div>
+        <div class="footer-status">
+          <span class="status-indicator online"></span>
+          <span>Client-Side Data Architecture</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
