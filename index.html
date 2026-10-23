@@ -192,7 +192,13 @@
             <h3 id="errorMessageTitle">Failed to Load Student Records</h3>
             <p id="errorMessageDetail">An error occurred while fetching the dataset.</p>
             <div class="error-tip" id="errorTip">
-              <strong>Tip for Local Testing:</strong> Browsers restrict <code>fetch()</code> requests over the <code>file://</code> protocol due to CORS security rules. Run this project through a local web server (e.g. VS Code Live Server, or <code>python -m http.server</code>).
+              <strong>Why this happens:</strong> Web browsers block <code>fetch()</code> requests when a file is opened directly from your computer via the <code>file://</code> protocol due to security (CORS) rules.
+              <br><br>
+              <strong>How to fix:</strong> Run this project using a local server:
+              <br>
+              1. Open PowerShell in this folder and run: <code>python -m http.server 8000</code>
+              <br>
+              2. Open your browser and go to: <code>http://localhost:8000</code>
             </div>
             <div class="error-actions">
               <button type="button" id="retryBtn" class="btn btn-primary">
@@ -200,13 +206,6 @@
                   <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
                 </svg>
                 <span>Retry Request</span>
-              </button>
-              <button type="button" id="fallbackBtn" class="btn btn-secondary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <span>Preview Demo Data (Offline Mode)</span>
               </button>
             </div>
           </div>

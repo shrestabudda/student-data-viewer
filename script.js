@@ -55,7 +55,6 @@ const DOM = {
   errorMessageTitle: document.getElementById('errorMessageTitle'),
   errorMessageDetail: document.getElementById('errorMessageDetail'),
   retryBtn: document.getElementById('retryBtn'),
-  fallbackBtn: document.getElementById('fallbackBtn'),
   emptyState: document.getElementById('emptyState'),
   emptyResetBtn: document.getElementById('emptyResetBtn'),
 
@@ -488,47 +487,6 @@ function setupEventListeners() {
   DOM.retryBtn.addEventListener('click', () => {
     fetchStudentsData();
   });
-
-  // Offline Preview Button (Allows testing even if user opened via file://)
-  if (DOM.fallbackBtn) {
-    DOM.fallbackBtn.addEventListener('click', () => {
-      loadFallbackData();
-    });
-  }
-}
-
-/**
- * --------------------------------------------------------------------------
- * Offline Demo Data Fallback
- * --------------------------------------------------------------------------
- * Used exclusively when double-clicking index.html directly from desktop/file://
- * to provide a seamless preview if a local HTTP server is not yet running.
- */
-const FALLBACK_STUDENT_RECORDS = [
-  { "id": "STU1001", "name": "Aarav Sharma", "email": "aarav.sharma@university.edu", "department": "Computer Science", "grade": 94.5 },
-  { "id": "STU1002", "name": "Bhavna Patel", "email": "bhavna.patel@university.edu", "department": "Information Technology", "grade": 88.0 },
-  { "id": "STU1003", "name": "Chirag Verma", "email": "chirag.verma@university.edu", "department": "Electronics & Communication", "grade": 76.5 },
-  { "id": "STU1004", "name": "Divya Nair", "email": "divya.nair@university.edu", "department": "Computer Science", "grade": 91.2 },
-  { "id": "STU1005", "name": "Eshan Gupta", "email": "eshan.gupta@university.edu", "department": "Mechanical Engineering", "grade": 82.4 },
-  { "id": "STU1006", "name": "Farhan Ali", "email": "farhan.ali@university.edu", "department": "Data Science", "grade": 96.0 },
-  { "id": "STU1007", "name": "Gauri Kulkarni", "email": "gauri.kulkarni@university.edu", "department": "Information Technology", "grade": 84.5 },
-  { "id": "STU1008", "name": "Harsh Vardhan", "email": "harsh.vardhan@university.edu", "department": "Civil Engineering", "grade": 69.8 },
-  { "id": "STU1009", "name": "Ishita Sen", "email": "ishita.sen@university.edu", "department": "Computer Science", "grade": 89.0 },
-  { "id": "STU1010", "name": "Jayant Joshi", "email": "jayant.joshi@university.edu", "department": "Electronics & Communication", "grade": 81.3 },
-  { "id": "STU1011", "name": "Kavya Menon", "email": "kavya.menon@university.edu", "department": "Data Science", "grade": 93.7 },
-  { "id": "STU1012", "name": "Lakshya Rawat", "email": "lakshya.rawat@university.edu", "department": "Mechanical Engineering", "grade": 74.0 },
-  { "id": "STU1013", "name": "Meera Iyer", "email": "meera.iyer@university.edu", "department": "Information Technology", "grade": 90.5 },
-  { "id": "STU1014", "name": "Nikhil Rao", "email": "nikhil.rao@university.edu", "department": "Civil Engineering", "grade": 79.2 },
-  { "id": "STU1015", "name": "Pooja Reddy", "email": "pooja.reddy@university.edu", "department": "Computer Science", "grade": 87.8 }
-];
-
-function loadFallbackData() {
-  appState.allStudents = FALLBACK_STUDENT_RECORDS;
-  appState.filteredStudents = [...FALLBACK_STUDENT_RECORDS];
-
-  populateDepartmentDropdown(FALLBACK_STUDENT_RECORDS);
-  updateSummaryStats(FALLBACK_STUDENT_RECORDS);
-  applyFiltersAndSort();
 }
 
 // Synchronize sort select dropdown with column clicks
