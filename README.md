@@ -214,6 +214,32 @@ let results = appState.allStudents.filter(student => {
 
 ---
 
+## 🌐 Deploying as a Static Website on GitHub Pages
+
+Because this project is built entirely with vanilla web standards and relative paths, it can be hosted for free on **GitHub Pages**:
+
+1. Push your repository to GitHub.
+2. In your repository on GitHub, click **Settings** (gear icon) > **Pages** (in the left sidebar).
+3. Under **Build and deployment**:
+   - **Source**: Select `Deploy from a branch`.
+   - **Branch**: Select `main` and folder `/ (root)`.
+4. Click **Save**.
+5. Wait 1–2 minutes. GitHub will provide a live public URL (e.g., `https://<username>.github.io/student-data-viewer/`).
+6. Because GitHub Pages serves files over HTTPS, the browser's `fetch('students.json')` executes normally with no CORS issues!
+
+---
+
+## 🔧 Troubleshooting Guide
+
+| Issue / Error Message | Root Cause | Solution |
+| :--- | :--- | :--- |
+| **"Failed to Load Student Records — Failed to fetch"** | Website was opened directly using a `file:///` address (double-clicking `index.html`). | Run the website through `start-server.bat` or `python -m http.server 8000`, then open `http://localhost:8000`. |
+| **`[WinError 10048] Only one usage of each socket address is normally permitted`** | Port 8000 is already in use by another running server or terminal. | The `start-server.bat` launcher automatically detects this and avoids launching a duplicate server. Alternatively, run `python -m http.server 8080` to use another port. |
+| **`python : The term 'python' is not recognized`** | Python is not added to your system's `PATH` environment variable. | Check the "Add Python to PATH" box during Python installation, or use the VS Code Live Server extension instead. |
+| **Table is empty after applying filters** | The search query and department filter combination has 0 matching records. | Click the **"Reset"** button or **"Clear Search & Filters"** to restore all 15 records. |
+
+---
+
 ## 🎯 Placement Interview Questions & Answers
 
 Here are answers to common questions interviewers may ask about this project:

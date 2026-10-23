@@ -192,13 +192,13 @@
             <h3 id="errorMessageTitle">Failed to Load Student Records</h3>
             <p id="errorMessageDetail">An error occurred while fetching the dataset.</p>
             <div class="error-tip" id="errorTip">
-              <strong>Why this happens:</strong> Web browsers block <code>fetch()</code> requests when a file is opened directly from your computer via the <code>file://</code> protocol due to security (CORS) rules.
+              <strong>Why this happens:</strong> Web browsers block <code>fetch()</code> requests when a file is opened directly from your computer via the <code>file://</code> protocol due to CORS security rules.
               <br><br>
-              <strong>How to fix:</strong> Run this project using a local server:
+              <strong>How to fix:</strong> Run this project through a local development server:
               <br>
-              1. Open PowerShell in this folder and run: <code>python -m http.server 8000</code>
+              &bull; <strong>Option 1 (1-Click):</strong> Double-click <code>start-server.bat</code> in the project folder.
               <br>
-              2. Open your browser and go to: <code>http://localhost:8000</code>
+              &bull; <strong>Option 2 (Terminal):</strong> Run <code>python -m http.server 8000</code> in this folder, then open <code>http://localhost:8000</code>.
             </div>
             <div class="error-actions">
               <button type="button" id="retryBtn" class="btn btn-primary">

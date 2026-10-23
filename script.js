@@ -69,26 +69,62 @@ const DOM = {
  * 3. Data Fetching via Fetch API (Async / Await)
  * --------------------------------------------------------------------------
  * Loads student records asynchronously from the local `students.json` file.
- * Handles HTTP errors, network timeouts, and CORS restrictions.
+ * Handles HTTP errors, network timeouts, invalid JSON, and CORS restrictions.
  */
 async function fetchStudentsData() {
   showLoading();
+
+  // If opened directly from desktop/file system, browsers block fetch() due to CORS
+  if (window.location.protocol === 'file:') {
+    showError(
+      'Browser Security Restriction (CORS): The browser blocks Fetch API requests when opened directly via file:///. ' +
+      'Please run the project using a local HTTP server (run start-server.bat or python -m http.server 8000).'
+    );
+    return;
+  }
 
   try {
     // Relative path to the JSON file
     const response = await fetch('students.json', { cache: 'no-cache' });
 
-    // In Fetch API, HTTP error statuses (like 404 or 500) do NOT reject the promise,
-    // so we explicitly check response.ok (status 200-299)
+    // Step 1: Check HTTP response status before parsing
     if (!response.ok) {
-      throw new Error(`HTTP Error ${response.status}: Failed to retrieve students.json (${response.statusText})`);
+      if (response.status === 404) {
+        throw new Error('HTTP 404: students.json file was not found in the project directory.');
+      } else {
+        throw new Error(`HTTP Error ${response.status}: Failed to retrieve students.json (${response.statusText || 'Server Error'})`);
+      }
     }
 
-    const data = await response.json();
+    // Step 2: Parse JSON with explicit syntax error handling
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      throw new Error('Invalid JSON Syntax: Unable to parse students.json. Please ensure the file contains valid JSON formatting.');
+    }
 
-    // Validate that the returned data is an array
+    // Step 3: Validate data format (must be a non-empty array)
     if (!Array.isArray(data)) {
-      throw new Error('Invalid data format: Expected a JSON array of student records.');
+      throw new Error('Unexpected Data Format: Expected a JSON array of student records, but received ' + typeof data + '.');
+    }
+
+    if (data.length === 0) {
+      throw new Error('Dataset Empty: The students.json file contains zero records.');
+    }
+
+    // Step 4: Validate required properties across records
+    const hasValidFields = data.every(student => 
+      student && 
+      typeof student === 'object' && 
+      'id' in student && 
+      'name' in student && 
+      'department' in student && 
+      'grade' in student
+    );
+
+    if (!hasValidFields) {
+      throw new Error('Unexpected Data Format: One or more records in students.json are missing required fields (id, name, department, grade).');
     }
 
     // Save fetched data to state
@@ -102,7 +138,7 @@ async function fetchStudentsData() {
 
   } catch (error) {
     console.error('Error fetching student data:', error);
-    showError(error.message);
+    showError(error.message || 'An unexpected network error occurred while fetching student records.');
   }
 }
 
